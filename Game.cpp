@@ -32,6 +32,8 @@ void Game::Reset()
 
 		bricks.push_back(brick);
 	}
+	winCondition = false; // for todo 6
+	gameOver = false; //for todo 7
 
 }
 
@@ -75,6 +77,27 @@ void Game::Render() const
 	paddle.Draw();
 	ball.Draw();
 
+	// NOTE - added for todo 6 
+	// put here to display text
+	if (winCondition)
+	{
+		std::string winTXT = " - You win :) Press R to reset.";
+		Console::SetCursorPosition(25, 10);
+		std::cout << winTXT;
+	}
+
+	// NOTE -  added for Todo 7 
+	//Put here to display text
+	
+	if (gameOver)
+	{
+			
+		std::string loseTXT = " - You lose :( Press R to reset.";
+		Console::SetCursorPosition(25,10);
+		std::cout << loseTXT;
+		
+	}
+
 	// TODO #3 - Update render to render all bricks
 	for(const Box& brick : bricks)
 	{
@@ -109,6 +132,11 @@ void Game::CheckCollision()
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
 
+	if (bricks.empty())
+	{
+		winCondition = true;
+		ball.moving = false;
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
@@ -116,4 +144,10 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+
+	if (ball.y_position + ball.y_velocity >= WINDOW_HEIGHT)
+	{
+		ball.moving = false;
+		gameOver = true;
+	}
 }
